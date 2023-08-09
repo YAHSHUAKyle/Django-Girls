@@ -7,18 +7,39 @@
         <a class="btn btn-secondary" href="{% url 'post_edit' pk=post.pk %}">
           {% include './icons/pencil-fill.svg' %}
         </a>
-        {% if post.published_date %}
-          <time class="date">
-          </time>
-        {% else %}
-          <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
-        {% endif %}
         <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}">
           {% include './icons/x.svg' %}
         </a>
+        {% if not post.published_date %}
+          <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+        {% endif %}
       {% endif %}
     </aside>
     <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
     <p>{{ post.text|linebreaksbr }}</p>
   </article>
+  <hr>
+  <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+  
+  {% for comment in post.comments.all %}
+    {% if user.is_authenticated or comment.approved_comment %}
+      <div class="comment">
+        <div class="date">
+          {{ comment.created_date }}
+          {% if not comment.approved_comment %}
+            <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}">
+              {% include './icons/check2.svg' %}
+            </a>
+            <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}">
+              {% include './icons/x.svg' %}
+            </a>
+          {% endif %}
+        </div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+      </div>
+    {% endif %}
+  {% empty %}
+    <p>No comments here yet.</p>
+  {% endfor %}
 {% endblock %}
