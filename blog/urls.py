@@ -3,6 +3,7 @@ from . import views
 from .api.views.blog import BlogRetrieveUpdateDeleteView
 from .api.views.comment import CommentListCreateView, CommentRetrieveUpdateDeleteView
 from .api.views.api_auth import CustomAuthToken
+from .api.views import comment
 
 
 urlpatterns = [
@@ -20,5 +21,6 @@ urlpatterns = [
     path('api/<int:pk>/', BlogRetrieveUpdateDeleteView.as_view()),
     path('apicomment/', CommentListCreateView.as_view()),
     path('apicomment/<int:pk>/', CommentRetrieveUpdateDeleteView.as_view()),
-    path('api-token-auth/', CustomAuthToken.as_view())
+    path('api-token-auth/', CustomAuthToken.as_view()),
+    path('api/<int:pk>/comment', comment.post_comment_list_create_view, name='post-comment-list'),
 ]
